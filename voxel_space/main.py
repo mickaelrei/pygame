@@ -10,8 +10,8 @@ import os.path
 pathFile = os.path.dirname(__file__)
 
 pygame.init()
-WIDTH = 300
-HEIGHT = 300
+WIDTH = 800
+HEIGHT = 600
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 FPS = 6000
@@ -33,6 +33,8 @@ def loadMaps(colorMapFile: str, heightMapFile: str) -> tuple[list[list[Color]], 
     # Get sizes
     colorMapSize = colorMap.get_size()
     heightMapSize = heightMap.get_size()
+    heightMap = pygame.transform.scale(heightMap, colorMapSize)
+    print(colorMapSize, heightMapSize)
 
     # Save height values
     heightMapList: list[list[int]] = []
@@ -174,13 +176,15 @@ def renderMap(colorMap: list[list[Color]], heightMap: list[list[int]],
         dz += .01
 
 def renderFrame():
-    window.fill(WHITE)
+    # window.fill(WHITE)
+    window.blit(backgroundSurface, (0, 0))
     renderMap(colorMap, heightMap, POS, heightScale=HEIGHT_SCALE, horizon=HORIZON_HEIGHT, distance=RENDER_DISTANCE, distanceScale=DISTANCE_SCALE)
 
 ######################################################
 # Variables
-colorMapFile = "maps/color0.png"
-heightMapFile = "maps/height0.png"
+colorMapFile = "maps/color4.png"
+heightMapFile = "maps/height4.png"
+backgroundSurface = pygame.transform.scale(pygame.image.load(os.path.join(pathFile, "images/sky.jpg")), (WIDTH, HEIGHT))
 POS = Vector2(440, 250)
 ROTATION = 0
 moveSpeed = 25
@@ -196,8 +200,8 @@ RENDER_STEP = 4
 RENDER_DISTANCE = 800
 DISTANCE_SCALE = 300
 HORIZON_HEIGHT = 100
-HEIGHT_SCALE = 150
-CAMERA_HEIGHT = 155
+HEIGHT_SCALE = 100
+CAMERA_HEIGHT = 255
 
 # Get maps
 colorMap, heightMap = loadMaps(colorMapFile, heightMapFile)
