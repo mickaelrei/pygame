@@ -24,7 +24,7 @@ class Matrix:
                 [-self.getIndex(0, 1), self.getIndex(0, 0)]
             ]) * determinant
         else:
-            return NotImplementedError(f"Calculation for inverse matrices of dimensions {self.getDimensions()[0]}x{self.getDimensions()[1]} not implemented")
+            raise NotImplementedError(f"Calculation for inverse matrices of dimensions {self.getDimensions()[0]}x{self.getDimensions()[1]} not implemented")
 
     def __add__(self, other) -> Matrix:
         if isinstance(other, Matrix):
@@ -115,17 +115,17 @@ class Matrix:
     @staticmethod
     def fromVector2(v: Vector2) -> Matrix:
         return Matrix([
-        [v.x],
-        [v.y]
-    ])
+            [v.x],
+            [v.y]
+        ])
 
     @staticmethod
     def fromVector3(v: Vector3) -> Matrix:
         return Matrix([
-        [v.x],
-        [v.y],
-        [v.z]
-    ])
+            [v.x],
+            [v.y],
+            [v.z]
+        ])
 
 if __name__ == "__main__":
     # Null matrix
@@ -142,9 +142,11 @@ if __name__ == "__main__":
         [7, 8, 9],
     ])
     print()
-    print(proj[0][2], proj[1][1], proj[2][0])
+    print(proj * (1/3) * 50)
     
     # Vectors
     point = Vector3(15, 0, 0)
     print()
     print(Matrix.fromVector3(point))
+
+    print(Matrix.toVector3())

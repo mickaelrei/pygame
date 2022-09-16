@@ -39,24 +39,6 @@ def clamp(n, minVal, maxVal):
         return maxVal
     return n
 
-def pointInPolygon(point: Vector2, vertices: list) -> bool:
-    c = 0
-    p1 = vertices[0]
-    n = len(vertices)
-
-    for i in range(1, len(vertices)):
-        p2 = vertices[i % n]
-        if (point.x > min(p1.x, p2.x) and
-            point.x <= max(p1.x, p2.x) and
-            point.y <= max(p1.y, p2.y) and
-            p1.x != p2.x):
-                xinters = (point.x - p1.x) * (p2.y - p1.y) / (p2.x - p1.x) + p1.y
-                if (p1.y == p2.y or point.y <= xinters):
-                    c += 1
-        p1 = p2
-    # if the number of edges we passed through is even, then it's not in the poly.
-    return c % 2 != 0
-
 def drawText(text: str, pos: Vector2, fontSize: int=18, fontType: str="comicsans", bold: bool=False,
              italic: bool=False, antiAlias: bool=False, textColor: tuple=BLACK, bgColor: tuple=None,
              centerX: float=0, centerY: float=0, surface: pygame.Surface=window):
@@ -150,7 +132,7 @@ class BaseObject:
                 z = 1
             else:
                 try:
-                    z = 1 / (GLOBAL_POSITION.z + Matrix.toVector3(point).z)
+                    z = 1 / (GLOBAL_POSITION.z + point.toVector3().z)
                 except ZeroDivisionError:
                     z = 1e-10
 
@@ -253,7 +235,6 @@ class BaseObject:
             # Draw outlines
             if drawEdges:
                 pygame.draw.lines(surface, self.color, False, face.vertices, self.edgeThickness)
-
 
 class Cube(BaseObject):
     def __init__(self, pos: Vector3=None, size: float=50, color: tuple=BLACK, edgeThickness: int=1,
@@ -495,7 +476,7 @@ def main():
         "images/lagarta.jpg",
         "images/lagarta.jpg",
     ]
-    # objects.append(Cube(Vector3(WIDTH/2, HEIGHT/2, 1), 400, BLACK, edgeThickness=2, faceColors=faceColors, faceTextures=lagartaTextures))
+    objects.append(Cube(Vector3(WIDTH/2, HEIGHT/2, 1), 400, BLACK, edgeThickness=2, faceColors=faceColors, faceTextures=lagartaTextures))
     #objects.append(Sphere(color=RED, pos=Vector3(0, 0, 3), radius=150, resolution=25, edgeThickness=1))
 
     # Import shape info
@@ -517,7 +498,7 @@ def main():
     ]
 
     # Add to list
-    objects.append(shapeObj)
+    # objects.append(shapeObj)
 
     # Generate cube circle
     '''n = 100
@@ -612,10 +593,11 @@ def main():
             obj.draw(paintFaces=True, drawEdges=True, drawTextures=True)
 
         # Show FPS
-        drawText(f"FPS: {clock.get_fps():.0f}", Vector2(), fontSize=15)
+        pygame.display.set_caption(f"3D Rendering | FPS: {clock.get_fps():.0f}")
 
+        # Update screen
         pygame.display.update()
-        dt = clock.tick(FPS)
+        clock.tick(FPS)
 
     '''
     TODO:
