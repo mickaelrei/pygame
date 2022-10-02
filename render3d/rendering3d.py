@@ -89,19 +89,25 @@ class BaseObject:
 
     def getRotated(self) -> list[Matrix]:
         # Create rotation matrices
+        cosX = cos(self.rotation.x + radians(GLOBAL_ROTATION.x))
+        sinX = sin(self.rotation.x + radians(GLOBAL_ROTATION.x))
+        cosY = cos(self.rotation.y + radians(GLOBAL_ROTATION.y))
+        sinY = sin(self.rotation.y + radians(GLOBAL_ROTATION.y))
+        cosZ = cos(self.rotation.z + radians(GLOBAL_ROTATION.z))
+        sinZ = sin(self.rotation.z + radians(GLOBAL_ROTATION.z))
         rotationX: Matrix = Matrix([
             [1, 0, 0],
-            [0, cos(self.rotation.x + radians(GLOBAL_ROTATION.x)), -sin(self.rotation.x + radians(GLOBAL_ROTATION.x))],
-            [0, sin(self.rotation.x + radians(GLOBAL_ROTATION.x)),  cos(self.rotation.x + radians(GLOBAL_ROTATION.x))],
+            [0, cosX, -sinX],
+            [0, sinX,  cosX],
         ])
         rotationY: Matrix = Matrix([
-            [cos(self.rotation.y + radians(GLOBAL_ROTATION.y)), 0, -sin(self.rotation.y + radians(GLOBAL_ROTATION.y))],
+            [cosY, 0, -sinY],
             [0, 1, 0],
-            [sin(self.rotation.y + radians(GLOBAL_ROTATION.y)), 0, cos(self.rotation.y + radians(GLOBAL_ROTATION.y))],
+            [sinY, 0, cosY],
         ])
         rotationZ: Matrix = Matrix([
-            [cos(self.rotation.z + radians(GLOBAL_ROTATION.z)), -sin(self.rotation.z + radians(GLOBAL_ROTATION.z)), 0],
-            [sin(self.rotation.z + radians(GLOBAL_ROTATION.z)),  cos(self.rotation.z + radians(GLOBAL_ROTATION.z)), 0],
+            [cosZ, -sinZ, 0],
+            [sinZ,  cosZ, 0],
             [0, 0, 1]
         ])
 
