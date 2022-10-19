@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 import sys
+sys.dont_write_bytecode = True
 import os.path
 from pygame.math import Vector2
 import math
