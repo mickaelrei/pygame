@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 import sys
+sys.dont_write_bytecode = True
 from pygame.math import Vector2, Vector3
 from matrix import Matrix
 import objects_info.cube
@@ -246,7 +247,6 @@ class Cube(BaseObject):
     def __init__(self, pos: Vector3=None, size: float=50, color: tuple=BLACK, edgeThickness: int=1,
                  cornerThickness: int=1, faceColors: dict=None, faceTextures: dict=None) -> None:
         super().__init__(pos, color, edgeThickness, cornerThickness, faceColors=faceColors, faceTextures=faceTextures)
-        print(self.faceTextures)
         self.size = size
         self.points: list[Vector3] = objects_info.cube.vertices
 

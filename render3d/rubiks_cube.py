@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 import sys
+sys.dont_write_bytecode = True
 from pygame.math import Vector2, Vector3
 from random import randint
 from math import cos, pi, sin, radians, inf
@@ -48,14 +49,14 @@ class RubiksCube:
         self.rotation = Vector3(0, 0, 0)
         self.cubes: list[list[list[rendering3d.Cube]]] = []
 
-        self.faceColors = {
-            "right": RED,
-            "front": GREEN,
-            "back": BLUE,
-            "top": WHITE,
-            "bottom": YELLOW,
-            "left": ORANGE,
-        }
+        self.faceColors = [
+            RED,
+            GREEN,
+            BLUE,
+            WHITE,
+            YELLOW,
+            ORANGE,
+        ]
         for x in range(self.dimensions):
             xList: list[list[rendering3d.Cube]] = []
             for y in range(self.dimensions):

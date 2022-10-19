@@ -1,5 +1,7 @@
 from __future__ import annotations
 from pygame.math import Vector2, Vector3
+import sys
+sys.dont_write_bytecode = True
 
 class Matrix:
     def __init__(self, matrix: list=None, cols: int=None, rows: int=None):
