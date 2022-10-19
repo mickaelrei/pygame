@@ -10,8 +10,8 @@ import os.path
 pathFile = os.path.dirname(__file__)
 
 pygame.init()
-WIDTH = 600
-HEIGHT = 600
+WIDTH = 1300
+HEIGHT = 800
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 FPS = 60
@@ -25,13 +25,13 @@ YELLOW = (255, 255, 0)
 ORANGE = (255, 127, 0)
 
 # Constants
-CELL_SIZE = 30
-SNAKE_MOVE_TIME = .1
+CELL_SIZE = 2
+SNAKE_MOVE_TIME = .01
 COLS = floor(WIDTH / CELL_SIZE)
 ROWS = floor(HEIGHT / CELL_SIZE)
 LINE_WIDTH = 1
 OFFSCREEN_CELLS_FRUIT_SPAWN = 25
-INITIAL_FRUITS = 15
+INITIAL_FRUITS = 1500
 WORLD_OFFSET = Vector2(0, 0)
 ARROW_SIZE = Vector2(80, 40)
 ARROW_DISTANCE_TO_SNAKE = 40
@@ -254,7 +254,7 @@ snakes: list[Snake] = []
 fruits: list[Fruit] = []
 
 # Create a snake
-snake = Snake(startLength=7)
+snake = Snake(startLength=150)
 snakes.append(snake)
 
 # Add random fruits
@@ -287,8 +287,6 @@ while True:
                 cameraLocked = not cameraLocked
             elif event.key == K_SPACE:
                 followButtonDown = True
-            elif event.key == K_c:
-                snakes[0].move()
         elif event.type == KEYUP:
             if event.key == K_SPACE:
                 followButtonDown = False
@@ -305,8 +303,8 @@ while True:
         fruit.draw()
 
     # Move all snakes
-    # for snake in snakes:
-    #     snake.move()
+    for snake in snakes:
+        snake.move()
 
     if cameraLocked or followButtonDown:
         # Focus "camera" on snake
@@ -320,7 +318,7 @@ while True:
     drawGrid()
 
     # Draw arrow towards fruit
-    arrowToFruit()
+    # arrowToFruit()
 
     pygame.display.set_caption(f"Snake | FPS: {clock.get_fps():.0f}")
     pygame.display.update()

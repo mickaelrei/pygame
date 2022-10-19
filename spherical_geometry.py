@@ -1,3 +1,4 @@
+from random import randint
 import pygame
 from pygame.locals import *
 import sys
@@ -45,7 +46,7 @@ while True:
             y = center.y + r * sin(lon + frame/frameStep) * sin(lat + frame/frameStep)
             z = center.z + r * cos(lon + frame/frameStep)
 
-            pygame.draw.circle(window, BLACK, (x, y), 3)
+            pygame.draw.circle(window, (randint(0, 255), randint(0, 255), randint(0, 255)), (x, y), 3)
 
     pygame.display.update()
     frame += 1
