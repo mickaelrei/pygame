@@ -24,21 +24,21 @@ GREEN = (0, 255, 0)
 PURPLE = (127, 0, 255)
 COLORS = [RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE]  
 
-def drawText(text: str, pos: Vector2, fontSize: int=18, fontType: str="comicsans", bold: bool=False,
+def drawText(text: str, centerPos: Vector2, fontSize: int=18, fontType: str="comicsans", bold: bool=False,
              italic: bool=False, antiAlias: bool=False, textColor: tuple=BLACK, bgColor: tuple=None,
              centerX: float=0, centerY: float=0, surface: pygame.Surface=window) -> Vector2:
     font = pygame.font.SysFont(fontType, fontSize, bold, italic)
     textSurface = font.render(text, antiAlias, textColor, bgColor)
     textRect = textSurface.get_rect()
-    surface.blit(textSurface, [pos.x + (textRect.width/2) * centerX, pos.y + (textRect.height/2) * centerY])
+    surface.blit(textSurface, [centerPos.x + (textRect.width/2) * (centerX - 1), centerPos.y + (textRect.height/2) * (centerY - 1)])
 
 class Word:
     def __init__(self, pos: Vector2, word: str, direction: Vector2, speed: float) -> None:
-        self.pos = pos
-        self.word = word
-        self.typed = ""
-        self.direction = direction if direction.length_squared() == 1 else direction.normalize()
-        self.speed = speed
+        self.pos: Vector2 = pos
+        self.word: str = word
+        self.typed: str = ""
+        self.direction: Vector2 = direction if direction.length_squared() == 1 else direction.normalize()
+        self.speed: float = speed
 
         # Get text rect size
         font = pygame.font.SysFont(FONT_TYPE, FONT_SIZE, False, False)
@@ -49,7 +49,7 @@ class Word:
         self.size = Vector2(textRect.width, textRect.height)        
 
     def update(self) -> None:
-        global currentWord
+        global currentWord, points
 
         self.pos += self.direction * self.speed
 
@@ -60,6 +60,7 @@ class Word:
             if currentWord == self:
                 currentWord = None
             currentWords.remove(self)
+            points -= 3
             generateWord()
             return
 
@@ -68,10 +69,10 @@ class Word:
         text = " " * len(self.typed) + self.word[len(self.typed):]
 
         # Draw
-        drawText(text.upper(), fontType="courier new", pos=self.pos, textColor=currentWord == self and ORANGE or WHITE, centerX=-1, centerY=-1)
+        drawText(text.upper(), fontType="courier new", centerPos=self.pos, textColor=currentWord == self and ORANGE or WHITE, centerX=0, centerY=0)
 
 def generateWord() -> None:
-    pos = Vector2(randint(50, WIDTH-50), -15)
+    pos = Vector2(randint(150, WIDTH-150), -15)
     direction = Vector2(randint(3, 10), randint(6, 10))
     currentWords.append(Word(pos, createWord(), direction, SPEED))
 
@@ -92,6 +93,12 @@ def createWord() -> str:
             break
         
     return chosenWord
+
+def endGame():
+    # Show game over screen
+    pygame.quit()
+    print("You lost!")
+    sys.exit()
 
 # Get words list
 with open(os.path.join(__file__, "../words.txt")) as file:
@@ -119,6 +126,7 @@ alphabet = "abcdefghijklmnopqrstuvwxyz"
 currentWord: Word = None
 currentTyping = ""
 lastWordTime = 0
+points = 10
 
 # List of Word objects
 currentWords: list[Word] = []
@@ -151,6 +159,7 @@ while True:
                         currentWords.remove(currentWord)
                         currentTyping = ""
                         currentWord = None
+                        points += 1
                         # generateWord()
 
     window.fill(BLACK)
@@ -160,14 +169,15 @@ while True:
         lastWordTime = time()
         generateWord()
 
-    # if len(currentWords) == 0:
-    #     pygame.quit()
-    #     print("You won!")
-    #     sys.exit()
+    if points <= 0:
+        endGame()
 
     for word in currentWords:
         word.update()
         word.draw()
+
+    # Show points
+    drawText(f"{points} points", fontType="courier new", centerPos=Vector2(5, HEIGHT - 5), centerX=1, centerY=-1, textColor=WHITE, fontSize=25)
 
     pygame.display.update()
     clock.tick(FPS)
