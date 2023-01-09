@@ -51,7 +51,7 @@ afolouCube = rendering3d.Cube(Vector3(WIDTH/2, HEIGHT/2, 1), 400, BLACK, edgeThi
 # Prepara a musiquita de fundo
 pygame.mixer.init()
 pygame.mixer.music.load(os.path.join(pathFile, "sounds/musica_afolou.mp3"))
-pygame.mixer.music.set_volume(15)
+pygame.mixer.music.set_volume(.05)
 pygame.mixer.music.play(-1) # O primeiro argumento é o tanto de repetições da música; se for -1, repete infinitamente
 
 while True:

@@ -49,7 +49,7 @@ bgCircleColor = RED
 bgCircleCenter = Vector2(WIDTH/2, HEIGHT/2)
 lineColor = BLACK
 lineWidth = 3
-lines = 4
+lines = 15
 generateLines = True
 drawFinalShape = False
 finalShapeColor = (100, 100, 100)
@@ -87,8 +87,8 @@ while True:
     pygame.draw.circle(window, bgCircleColor, bgCircleCenter, bgCircleRadius)
 
     # Calculate line drawing based on mouse pos
-    # idxEnd = map(mouseX, 0, WIDTH, 0, len(movingBalls))
-    idxEnd = len(movingBalls)
+    idxEnd = map(mouseX, 0, WIDTH, 0, len(movingBalls))
+    # idxEnd = len(movingBalls)
 
     # Update alphas and draw lines
     for i in range(len(movingBalls)):

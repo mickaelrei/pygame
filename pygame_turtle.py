@@ -19,19 +19,38 @@ BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 
 class Turtle:
-    def __init__(self, pos: Vector2, angle: float=0, radius=25, color=BLACK) -> None:
+    def __init__(self, pos: Vector2, angle: float=0, radius=25, lineWidth: float=1, color=BLACK, visible: bool=True) -> None:
         self.pos = pos
         self.color = color
         self.angle = angle
         self.radius = radius
+        self.lineWidth = lineWidth
+        self.visible = visible
+        self.isDown = False
         self.trail = []
 
-    def color(self, color):
+    def setColor(self, color):
         self.color = color
     
+    def penDown(self):
+        self.isDown = True
+
+    def setLineWidth(self, lineWidth: float=1):
+        self.lineWidth = lineWidth
+
+    def penUp(self):
+        self.isDown = False
+        self.trail = []
+
     def forward(self, amount):
-        self.pos.x += cos(radians(self.angle)) * amount
-        self.pos.y += sin(radians(self.angle)) * amount
+        dx = cos(radians(self.angle)) * amount
+        dy = sin(radians(self.angle)) * amount
+
+        self.pos.x += dx
+        self.pos.y += dy
+
+        # Save new pos in trail
+        self.trail.append(self.pos.copy())
 
     def turnLeft(self, angle):
         self.angle -= angle
@@ -55,20 +74,21 @@ class Turtle:
     def draw(self, surface=window):
         # Draw trail
         for i in range(len(self.trail)-1):
-            color = pygame.Color(0, 0, 0)
-            color.hsla = ((i/len(self.trail)-1 * 1) % (i+1) % 360, 100, 50, 100)
+            # color = pygame.Color(0, 0, 0)
+            # color.hsla = ((i/len(self.trail)-1 * 1) % (i+1) % 360, 100, 50, 100)
             p1 = self.trail[i]
             p2 = self.trail[i+1]
-            a = 35
-            r = 0
-            pygame.draw.line(surface, self.color, (p1[0] + cos(frame/randint(15,35)) * r, p1[1] + sin(frame/randint(15,35)) * r), (p2[0] + cos(frame/randint(15,35)) * r, p2[1] + sin(frame/randint(15,35)) * r), 2)
+            # a = 35
+            # r = 0
+            # pygame.draw.line(surface, self.color, (p1[0] + cos(frame/randint(15,35)) * r, p1[1] + sin(frame/randint(15,35)) * r), (p2[0] + cos(frame/randint(15,35)) * r, p2[1] + sin(frame/randint(15,35)) * r), 2)
 
         self.trail.append((self.pos.x, self.pos.y))
 
         x = self.pos.x + cos(radians(self.angle)) * self.radius
         y = self.pos.y + sin(radians(self.angle)) * self.radius
-        pygame.draw.circle(surface, self.color, (self.pos.x, self.pos.y), self.radius)
-        pygame.draw.line(surface, RED, (self.pos.x, self.pos.y), (x, y), 2)
+        if self.visible:
+            pygame.draw.circle(surface, self.color, (self.pos.x, self.pos.y), self.radius)
+            pygame.draw.line(surface, RED, (self.pos.x, self.pos.y), (x, y), 2)
 
 def map(n, start1, stop1, start2, stop2):
     return (n - start1) / (stop1 - start1) * (stop2 - start2) + start2
@@ -106,7 +126,7 @@ while True:
             pygame.quit()
             sys.exit()
 
-    window.fill(WHITE)
+    window.fill(BLACK)
 
     # Calculate color
     direction = Vector2(mouseX, mouseY) - center
@@ -128,9 +148,10 @@ while True:
         pygame.draw.line(window, color, (p1[0], p1[1]), (p2[0], p2[1]), 2)
     
     # Show angle
-    pygame.draw.circle(window, BLACK, (WIDTH/2, HEIGHT/2), direction.magnitude(), 3)
+    pygame.draw.circle(window, BLUE, (WIDTH/2, HEIGHT/2), direction.magnitude(), 3)
     pygame.draw.line(window, RED, (WIDTH/2, HEIGHT/2), (WIDTH/2 + cos(radians(angle)) * direction.magnitude(), HEIGHT/2 + sin(radians(angle)) * direction.magnitude()))
 
+    pygame.display.set_caption(f"Turtle | FPS: {clock.get_fps():.0f} | Angle: {angle:.0f}")
     pygame.display.update()
     frame += 1
     clock.tick(FPS)
