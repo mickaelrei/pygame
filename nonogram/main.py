@@ -309,7 +309,7 @@ class Board:
         cell: Cell = self.board[row][col]
         if cell.revealed: return
 
-        if (cell.isX and self.currentSelector.isX) or (cell.color == self.currentSelector.color):
+        if (cell.isX and self.currentSelector.isX) or (not cell.isX and cell.color == self.currentSelector.color):
             # Got right
             pass
         else:
