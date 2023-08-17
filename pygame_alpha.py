@@ -63,13 +63,13 @@ centerY = HEIGHT//2
 # Variables
 clearScreen = True
 circleRadius = 35
-numCircles = 600
-circleOffsetMult = .05
+numCircles = 40
+circleOffsetMult = .7
 radiusX = 150
 radiusY = 250
 rotSlownessX = 45
 rotSlownessY = 45
-colorChangeSpeed = .0001
+colorChangeSpeed = 2
 colorMult = 3
 alphaChangeSlowness = 1500
 alpha = 255
@@ -80,7 +80,7 @@ numBalls = 10
 for i in range(numBalls):
     ball = WeirdBall(
         _circleRadius=None,
-        _numCircles=40,
+        _numCircles=numCircles,
         _circleOffsetMult=None,
         _radiusX=radiusX+i*10,#randint(50, 250),
         _radiusY=radiusY-i*10,#randint(50, 250),

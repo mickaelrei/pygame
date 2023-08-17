@@ -1,5 +1,7 @@
 from pygame.math import Vector3
 
+# Size (8, 2, 3)
+
 vertices: list[Vector3] = [
     Vector3(-4, -1, -1.5),
     Vector3(-4, 1, -1.5),

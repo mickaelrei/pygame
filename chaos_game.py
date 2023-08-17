@@ -148,8 +148,8 @@ center = Vector2(WIDTH/2, HEIGHT/2)
 
 # Variables
 radius = 250
-sides = 8
-alwaysNewVertex = 1
+sides = 3
+alwaysNewVertex = 0
 needsToBeInsideShape = 1
 pointSize = 1
 calcsPerFrame = 10000
@@ -194,9 +194,8 @@ for i in range(15):
     randomPoints.append(randint(1, 359))
 
 chosenShape = starPoints
-vertices = getVerticesForPolygon(Vector2(WIDTH/2, HEIGHT/2), chosenShape)
-#vertices = getVerticesForPolygon(Vector2(WIDTH/2, HEIGHT/2), [0, 140, 220, 0])
-#vertices = getVerticesForShape(sides, radius, center, 2)
+# vertices = getVerticesForPolygon(Vector2(WIDTH/2, HEIGHT/2), chosenShape)
+vertices = getVerticesForShape(sides, radius, center, 2)
 
 # Set the initial point
 lastPoint = center + Vector2(randint(-radius, radius), randint(-radius, radius))
@@ -246,5 +245,6 @@ while True:
     for point in points:
         pygame.draw.circle(window, BLACK, point, pointSize)
 
+    pygame.display.set_caption(f"Chaos Game | FPS: {clock.get_fps():.0f}")
     pygame.display.update()
     clock.tick(FPS)

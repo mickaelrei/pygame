@@ -79,7 +79,7 @@ while True:
     window.fill(WHITE)
 
     if len(points) >= 2:
-        pygame.draw.lines(window, RED, False, points, round(abs(sin(frame/25))*40))
+        pygame.draw.lines(window, RED, False, points, 1)
 
     # Draw lines and points
     pygame.draw.line(window, BLACK, (startPos.x, startPos.y), (x1, y1), 3)

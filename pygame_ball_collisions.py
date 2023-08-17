@@ -259,7 +259,7 @@ while True:
 
     # Draw all balls
     for ball in balls:
-        #ball.applyForce(gravity)
+        ball.applyForce(gravity)
         ball.draw()
 
     # Draw information when debug mode is active

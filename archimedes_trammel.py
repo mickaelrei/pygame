@@ -113,9 +113,8 @@ while True:
         m.drawBall()
 
     # Draw lines between the balls to reveal a shape
-    if drawFinalShape:
-        ballsPos.append(ballsPos[0])
-        pygame.draw.lines(window, finalShapeColor, False, ballsPos, lineWidth)
+    if drawFinalShape and len(ballsPos) > 1:
+        pygame.draw.lines(window, finalShapeColor, True, ballsPos, lineWidth)
 
     pygame.display.set_caption(f"Trammel of Archimedes | FPS: {clock.get_fps():.0f}")
     pygame.display.update()

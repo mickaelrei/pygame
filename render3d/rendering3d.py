@@ -64,7 +64,7 @@ class Face:
 
 class BaseObject:
     def __init__(self, pos: Vector3, color: tuple=BLACK, edgeThickness: int=1,
-                 cornerThickness: int=1, faces: list[int]=None, faceColors: dict=None, faceTextures: dict=None) -> None:
+                 cornerThickness: int=1, faces: list[int]=None, faceColors: list=None, faceTextures: dict=None) -> None:
         self.pos = pos
         self.color = color
         self.edgeThickness = edgeThickness
@@ -127,7 +127,6 @@ class BaseObject:
         return rotatedPoints
 
     def getPoints(self) -> list[Vector2]:
-
         # Save the projected points
         rotatedPoints = self.getRotated()
         projectedPoints: list = []
@@ -171,8 +170,7 @@ class BaseObject:
             try:
                 color = self.faceColors[faceId]
             except IndexError:
-                print(f"No color for faceId {faceId}")
-                continue
+                color = self.color
 
             rotatedPoints = self.getRotated()
             midPoint = Matrix.toVector3(rotatedPoints[indexes[0]]).lerp(Matrix.toVector3(rotatedPoints[indexes[2]]), .5)
@@ -245,7 +243,7 @@ class BaseObject:
 
 class Cube(BaseObject):
     def __init__(self, pos: Vector3=None, size: float=50, color: tuple=BLACK, edgeThickness: int=1,
-                 cornerThickness: int=1, faceColors: dict=None, faceTextures: dict=None) -> None:
+                 cornerThickness: int=1, faceColors: list=None, faceTextures: dict=None) -> None:
         super().__init__(pos, color, edgeThickness, cornerThickness, faceColors=faceColors, faceTextures=faceTextures)
         self.size = size
         self.points: list[Vector3] = objects_info.cube.vertices
@@ -334,7 +332,7 @@ class Cube(BaseObject):
 
 class Sphere(BaseObject):
     def __init__(self, pos: Vector3=None, radius: float=50, resolution: int=15, color: tuple=BLACK, edgeThickness: int=1,
-                 cornerThickness: int=1, faceColors: dict=None) -> None:
+                 cornerThickness: int=1, faceColors: list=None) -> None:
         super().__init__(pos, color, edgeThickness, cornerThickness, faceColors)
         self.size = radius
         self.radius = radius
@@ -482,8 +480,8 @@ def main():
         "images/lagarta.jpg",
         "images/lagarta.jpg",
     ]
-    objects.append(Cube(Vector3(WIDTH/2, HEIGHT/2, 1), 400, BLACK, edgeThickness=2, faceColors=faceColors, faceTextures=lagartaTextures))
-    #objects.append(Sphere(color=RED, pos=Vector3(0, 0, 3), radius=150, resolution=25, edgeThickness=1))
+    # objects.append(Cube(Vector3(WIDTH/2, HEIGHT/2, 1), 400, BLACK, edgeThickness=2, faceColors=faceColors, faceTextures=lagartaTextures))
+    # objects.append(Sphere(color=RED, pos=Vector3(0, 0, 3), radius=150, resolution=25, edgeThickness=1))
 
     # Import shape info
     import objects_info.shape
@@ -506,23 +504,24 @@ def main():
     # Add to list
     # objects.append(shapeObj)
 
-    # Generate cube circle
-    '''n = 100
-    r = 150
-    for i in range(n):
-        faceColors = {
-            "right": GREEN,
-            "front": YELLOW,
-            "back": BLUE,
-            "top": BLACK,
-            "bottom": ORANGE,
-            "left": RED,
-        }
-        angle = map(i, 0, n, 0, 2*pi)
-        x = WIDTH/2 + cos(angle - pi/2) * r
-        y = HEIGHT/2 + sin(angle - pi/2) * r
-        objects.append(Cube(pos=Vector3(x, y, 3), size=50, edgeThickness=1, faceColors=faceColors))
-        #objects.append(Sphere(color=RED, pos=Vector3(x, y, 3), radius=150, resolution=3, edgeThickness=1, faceColors=faceColors))'''
+    # Read vertex data from .obj file
+    from objects_info.read_obj import readObj
+
+    vertices, faces = readObj(os.path.join(__file__, f"..\\objects_info\\text.obj"))
+
+    # Create face colors
+    faceColorsFile = []
+    for i in range(len(faces)):
+        color = pygame.Color(0, 0, 0, 0)
+        color.hsla = ((i / len(faces) * 1) % 360, 100, 50, 0)
+        faceColorsFile.append(color)
+
+    # Create object
+    fileObject = BaseObject(Vector3(WIDTH/2, HEIGHT/2, 3), color=RED, faces=faces, faceColors=faceColorsFile)
+    fileObject.points = vertices
+    fileObject.size = 100
+
+    objects.append(fileObject)
 
     # States
     leftButtonDown = False
@@ -596,7 +595,7 @@ def main():
 
         # Draw objects
         for obj in objects:
-            obj.draw(paintFaces=True, drawEdges=True, drawTextures=True)
+            obj.draw(paintFaces=True, drawEdges=False, drawTextures=False)
 
         # Show FPS
         pygame.display.set_caption(f"3D Rendering | FPS: {clock.get_fps():.0f}")

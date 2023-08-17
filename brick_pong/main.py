@@ -100,7 +100,7 @@ class Brick:
             powerupType = choices(possiblePowerups, powerupWeights, k=1)[0]
             powerups.append(Powerup(Vector2(self.pos.x, self.pos.y), powerupType=powerupType,
                             color=powerupColors[powerupType], duration=randint(4, 7), fallSpeed=randint(1, 4)))
-            
+
 class Ball:
     def __init__(self, pos: Vector2, vel: Vector2, speed: float=3, radius: int=15, color: tuple=RED,
                  textureFile: str='') -> None:
@@ -110,10 +110,11 @@ class Ball:
         self.radius = radius
         self.speed = speed
         self.ballSprite = None
+        self.rotation = 0
         if textureFile:
             self.ballSprite = pygame.image.load(os.path.join(pathFile, textureFile)).convert_alpha()
             self.ballSprite = pygame.transform.scale(self.ballSprite, (self.radius*2, self.radius*2))
-    
+
     def update(self) -> bool:
         if self.vel.x == 0:
             self.vel.x += .1
@@ -224,7 +225,9 @@ class Ball:
 
     def draw(self, surface: pygame.Surface=window) -> None:
         if self.ballSprite:
-            surface.blit(self.ballSprite, (self.pos.x - self.radius, self.pos.y - self.radius))
+            surf = pygame.transform.rotate(self.ballSprite, self.rotation)
+            self.rotation += 3
+            surface.blit(surf, (self.pos.x - self.radius, self.pos.y - self.radius))
         else:
             pygame.draw.circle(surface, self.color, (self.pos.x, self.pos.y), self.radius)
 

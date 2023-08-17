@@ -46,7 +46,7 @@ COLORS = {
 }
 
 # Customization
-CELL_SCALE = 1
+CELL_SCALE = 3
 LINE_COLOR = (30, 30, 30)
 
 class Directions:
@@ -187,13 +187,13 @@ class Grid:
         pygame.draw.rect(surface, self.grid[y][x], (posX, posY, CELL_SCALE, CELL_SCALE))
 
     def paintCell(self, x: int, y: int, color: tuple=None) -> None:
-        self.grid[y][x] = color or choice(list(COLORS))
+        self.grid[y][x] = color or choice(COLOR_CYCLE)
         self.drawCell(x, y)
 
     def paintRandom(self, color: tuple=None) -> None:
         x = randrange(0, self.cols)
         y = randrange(0, self.rows)
-        self.grid[y][x] = color or choice(list(COLORS))
+        self.grid[y][x] = color or choice(COLOR_CYCLE)
 
         self.drawCell(x, y)
 
@@ -240,8 +240,8 @@ while True:
             GRID.moveAnt()
             steps += 1
 
-    # GRID.drawGrid()
-    # GRID.drawLines()
+    GRID.drawGrid()
+    GRID.drawLines()
 
     pygame.display.set_caption(f"Langton Ant | Incremental: {incremental:.0f} | Steps: {steps:,} | FPS: {clock.get_fps():.0f}")
     pygame.display.update()
