@@ -20,15 +20,37 @@ RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 
+# Store previous results to prevent reaching max recursion depth
+l = {}
+
+def unfactorial(x):
+    if -1 < x < 1:
+        return 1
+    if l.get(x):
+        return l[x]
+
+    if x > 0:
+        res = x / unfactorial(x - 1)
+    else:
+        res = x / unfactorial(x + 1)
+    l[x] = res
+    return res
+
+def factorial(x):
+    if -1 < x < 1:
+        return 1
+    if l.get(x):
+        return l[x]
+
+    if x > 0:
+        res = x * factorial(x - 1)
+    else:
+        res = x * factorial(x + 1)
+    l[x] = res
+    return res
+
 def f(x: float) -> float:
-    try:
-        return math.sin(x)
-    except ZeroDivisionError:
-        return None
-    except ValueError:
-        return None
-    except TypeError:
-        return None
+    return unfactorial(math.floor(x))
 
 def map(n, start1, stop1, start2, stop2):
     return (n - start1) / (stop1 - start1) * (stop2 - start2) + start2
@@ -71,11 +93,6 @@ maxDimension = 1000
 # States
 mouseDown = False
 drawLines = True
-'''screenStartX = -10
-screenEndX = 10
-screenStartY = -10
-screenEndY = 10'''
-steps = 75
 numPoints = 1000
 
 while True:
@@ -142,19 +159,12 @@ while True:
 
     # Calculate all points
     points: list = []
-    #for i in range(round(graphStartX*steps), round(graphEndX*steps)):
     for i in range(numPoints):
         x = map(i, 0, numPoints-1, -graphDimension - planeOffset.x, graphDimension - planeOffset.x)
-        #x = i/steps
-        y = f(x)
-        if y is None:
+        try:
+            y = f(x)
+        except:
             continue
-
-        # Update highest and lowest Y
-        # if y < lowestY:
-        #     lowestY = y
-        # if y > highestY:
-        #     highestY = y
 
         points.append(Vector2(x, y))
 
@@ -174,6 +184,6 @@ while True:
                 pygame.draw.line(window, pointColor, (x1 + graphOffset.x, y1 + graphOffset.y), (x2 + graphOffset.x, y2 + graphOffset.y), pointWidth)
         else:
             pygame.draw.circle(window, pointColor, (x1 + graphOffset.x, y1 + graphOffset.y), pointWidth)
-    
+
     pygame.display.update()
     clock.tick(FPS)
