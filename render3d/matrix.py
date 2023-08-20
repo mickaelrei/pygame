@@ -145,10 +145,8 @@ if __name__ == "__main__":
     ])
     print()
     print(proj * (1/3) * 50)
-    
+
     # Vectors
     point = Vector3(15, 0, 0)
     print()
     print(Matrix.fromVector3(point))
-
-    print(Matrix.toVector3())

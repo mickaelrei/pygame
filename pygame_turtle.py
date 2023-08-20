@@ -31,7 +31,7 @@ class Turtle:
 
     def setColor(self, color):
         self.color = color
-    
+
     def penDown(self):
         self.isDown = True
 
@@ -72,16 +72,6 @@ class Turtle:
         self.angle = angle
 
     def draw(self, surface=window):
-        # Draw trail
-        for i in range(len(self.trail)-1):
-            # color = pygame.Color(0, 0, 0)
-            # color.hsla = ((i/len(self.trail)-1 * 1) % (i+1) % 360, 100, 50, 100)
-            p1 = self.trail[i]
-            p2 = self.trail[i+1]
-            # a = 35
-            # r = 0
-            # pygame.draw.line(surface, self.color, (p1[0] + cos(frame/randint(15,35)) * r, p1[1] + sin(frame/randint(15,35)) * r), (p2[0] + cos(frame/randint(15,35)) * r, p2[1] + sin(frame/randint(15,35)) * r), 2)
-
         self.trail.append((self.pos.x, self.pos.y))
 
         x = self.pos.x + cos(radians(self.angle)) * self.radius
@@ -134,22 +124,34 @@ while True:
         directionUnit = direction.normalize()
     except ValueError:
         continue
-    angle = degrees(atan2(direction.y, direction.x))
+    angle = degrees(atan2(directionUnit.y, directionUnit.x))
     color = pygame.Color(0, 0, 0)
-    color.hsla = ((angle + 90) % 360, 100, map(direction.magnitude(), 0, max(WIDTH, HEIGHT), 100, 0), 0)
-    
-    #mouseX = WIDTH/2
-    #mouseY = HEIGHT/2
-    points = calcPoints(t, int(map(mouseX, 0, WIDTH, 0, 3000)), map(mouseY, 0, HEIGHT, 0, 180), 1, .2)
+    color.hsla = (
+        (angle + 90) % 360,
+        100,
+        map(direction.magnitude(), 0, max(WIDTH, HEIGHT), 100, 0),
+        0
+    )
+
+    mouseX = WIDTH/2
+    mouseY = HEIGHT/2
+    points = calcPoints(t, int(map(mouseX, 0, WIDTH, 0, 3000)), angle, 1, .2)
     for i in range(len(points)-1):
         p1 = points[i]
         p2 = points[i+1]
 
         pygame.draw.line(window, color, (p1[0], p1[1]), (p2[0], p2[1]), 2)
-    
+
     # Show angle
     pygame.draw.circle(window, BLUE, (WIDTH/2, HEIGHT/2), direction.magnitude(), 3)
-    pygame.draw.line(window, RED, (WIDTH/2, HEIGHT/2), (WIDTH/2 + cos(radians(angle)) * direction.magnitude(), HEIGHT/2 + sin(radians(angle)) * direction.magnitude()))
+    pygame.draw.line(
+        window, RED,
+        (WIDTH/2, HEIGHT/2),
+        (
+            WIDTH/2 + cos(radians(angle)) * direction.magnitude(),
+            HEIGHT/2 + sin(radians(angle)) * direction.magnitude()
+        )
+    )
 
     pygame.display.set_caption(f"Turtle | FPS: {clock.get_fps():.0f} | Angle: {angle:.0f}")
     pygame.display.update()

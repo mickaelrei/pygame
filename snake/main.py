@@ -10,11 +10,11 @@ import os.path
 pathFile = os.path.dirname(__file__)
 
 pygame.init()
-WIDTH = 1300
-HEIGHT = 800
+WIDTH = 600
+HEIGHT = 600
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
-FPS = 60
+FPS = 10
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -25,7 +25,7 @@ YELLOW = (255, 255, 0)
 ORANGE = (255, 127, 0)
 
 # Constants
-CELL_SIZE = 15
+CELL_SIZE = 3
 SNAKE_MOVE_TIME = .01
 COLS = floor(WIDTH / CELL_SIZE)
 ROWS = floor(HEIGHT / CELL_SIZE)
@@ -58,7 +58,6 @@ def worldToGrid() -> Vector2:
 # Function to add a fruit randomly on the grid
 def addFruit(pos: Vector2=None) -> None:
     if pos != None:
-        print("Added fruit")
         fruits.append(Fruit(pos))
         return
 
@@ -81,7 +80,7 @@ def addFruit(pos: Vector2=None) -> None:
                 if segment.x == x and segment.y == y:
                     valid = False
                     break
-            
+
             if not valid:
                 break
 
@@ -93,7 +92,6 @@ def addFruit(pos: Vector2=None) -> None:
 
         # If it's valid, add a fruit
         if valid:
-            print(f"Added fruit on pos ({x}, {y})")
             fruits.append(Fruit(Vector2(x, y)))
             break
 
@@ -126,7 +124,6 @@ def arrowToFruit() -> None:
         if ((fruit.pos.x >= offset.x and fruit.pos.x < offset.x + COLS) and
             (fruit.pos.y >= offset.y and fruit.pos.y < offset.y + ROWS)):
             # We have at least one fruit on screen, so no need to blit arrow
-            print(f"At least one onScreen fruit at pos ({fruit.pos.x}, {fruit.pos.y})")
             return
         else:
             # This fruit is offscreen, so add to the list
@@ -144,12 +141,9 @@ def arrowToFruit() -> None:
 
     direction = (closestFruit.pos - snakeHead).normalize()
     angle = atan2(direction.y, direction.x)
-    # print(angle)
 
     sprite = pygame.transform.rotate(arrowSprite, angle)
     spritePos = (snakeHead) * CELL_SIZE - ARROW_SIZE/2 + Vector2(CELL_SIZE, CELL_SIZE)/2# + direction * ARROW_DISTANCE_TO_SNAKE
-    print(spritePos)
-    # print(f"Drawing arrow at {spritePos}")
     window.blit(sprite, spritePos)
 
 class Direction:
@@ -162,7 +156,7 @@ class Fruit:
     def __init__(self, pos: Vector2, color: tuple=None) -> None:
         self.pos = pos
         self.color = color or FRUIT_COLOR
-    
+
     def draw(self) -> None:
         offset = worldToGrid()
         pygame.draw.rect(window, self.color, (self.pos.x * CELL_SIZE + offset.x,
@@ -208,7 +202,8 @@ class Snake:
         # Check if snake ate a fruit
         ateFruit = False
         for fruit in fruits:
-            if fruit.pos.x == nextPos.x and fruit.pos.y == nextPos.y:
+            diff = fruit.pos - nextPos
+            if abs(diff.x) < .1 and abs(diff.y) < .1:
                 ateFruit = True
                 fruits.remove(fruit)
                 addFruit()
@@ -254,7 +249,7 @@ snakes: list[Snake] = []
 fruits: list[Fruit] = []
 
 # Create a snake
-snake = Snake(startLength=150)
+snake = Snake(startLength=5)
 snakes.append(snake)
 
 # Add random fruits
@@ -323,16 +318,3 @@ while True:
     pygame.display.set_caption(f"Snake | FPS: {clock.get_fps():.0f}")
     pygame.display.update()
     clock.tick(FPS)
-
-'''
-DONE:
- - Desenhar as linhas corretamente de acordo com o WORLD_OFFSET
- - Quando o usuário apertar um botão (espaço, Y ou sla), focar a "câmera" na cobra
-
-TODO:
- - Se não tiver nenhum fruta no campo de visão, colocar uma seta na tela apontando para a fruta mais próxima
- - Adicionar texturas pra cobra (cabeça e corpo), fruta e... chão?
- - Adicionar menu com controles e etc
- PASSAR TUDO PRO MICKAELREI
-
-'''

@@ -5,7 +5,7 @@ pygame.init()
 
 WIDTH = 1300
 HEIGHT = 600
-FPS = 6000
+FPS = 60
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 
@@ -15,18 +15,15 @@ BLACK = (0, 0, 0)
 a = 50
 def drawCircle(x, y, r):
     pygame.draw.circle(window, WHITE, (x, y), r, 1)
-    if r > 5:
+    if r > 2:
         newX = cos(radians(a)) * r
         newY = sin(radians(a)) * r
         drawCircle(x + newX, y + newY, r/2)
-        drawCircle(x - newX, y - newY, r/2)
+        # drawCircle(x - newX, y - newY, r/2)
         drawCircle(x - newY, y + newX, r/2)
-        drawCircle(x + newX, y - newY, r/2)
+        # drawCircle(x + newX, y - newY, r/2)
 
-        drawCircle(x + newX, y + newY, r/2)
-        drawCircle(x - newX, y - newY, r/2)
         drawCircle(x - newX, y + newY, r/2)
-        drawCircle(x + newX, y - newY, r/2)
 
         # drawCircle(x - r, y, r/2)
         # drawCircle(x + r, y, r/2)
@@ -41,7 +38,8 @@ while True:
 
     window.fill(BLACK)
     drawCircle(WIDTH/2, HEIGHT/2, 150)
-    a = pygame.mouse.get_pos()[0] / WIDTH * 360
+    # a = pygame.mouse.get_pos()[0] / WIDTH * 360
+    a += .5
 
     pygame.display.set_caption(f"FPS: {clock.get_fps():.0f}")
     pygame.display.update()
