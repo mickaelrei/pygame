@@ -79,9 +79,12 @@ def generateWord() -> None:
 def createWord() -> str:
     while True:
         chosenWord = possibleWords[randint(0, len(possibleWords)-1)]
+        if len(chosenWord) > MAX_WORD_LENGTH or len(chosenWord) < MIN_WORD_LENGTH:
+            continue
         
         if len(currentWords) == 0:
             break
+
 
         valid = True
         for word in currentWords:
@@ -101,7 +104,7 @@ def endGame():
     sys.exit()
 
 # Get words list
-with open(os.path.join(__file__, "../words.txt")) as file:
+with open(os.path.join(os.path.dirname(__file__), "words.txt")) as file:
     wordsList = file.readlines()
     file.close()
 
@@ -114,21 +117,22 @@ for word in wordsList:
         possibleWords.append(word.lower())
 
 # Variables
-SPEED = 1.3
+SPEED = 20
 FONT_TYPE = "courier new"
 FONT_SIZE = 18
 WORD_COLOR = WHITE
 FOCUSED_WORD_COLOR = ORANGE
-MAX_WORDS_ON_SCREEN = 6
-NEW_WORD_DELAY = .6
+MIN_WORD_LENGTH = 10
+MAX_WORD_LENGTH = 15
+MAX_WORDS_ON_SCREEN = 20
+NEW_WORD_DELAY = .1
 
-alphabet = "abcdefghijklmnopqrstuvwxyz"
 currentWord: Word = None
 currentTyping = ""
 lastWordTime = 0
 points = 10
 
-# List of Word objects
+# List of Word objects1
 currentWords: list[Word] = []
 
 while True:

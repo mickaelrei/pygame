@@ -141,13 +141,13 @@ class Ball:
             areaTL = Vector2(0, 0)
             areaTL.x = min(self.pos.x, targetPos.x)
             areaTL.y = min(self.pos.y, targetPos.y)
-            areaTL -= Vector2(self.radius, self.radius) * 2
+            areaTL -= Vector2(self.radius, self.radius)# * 2
             areaTL.x = max(areaTL.x, 0)
             areaTL.y = max(areaTL.y, 0)
             areaBR = Vector2(0, 0)
             areaBR.x = max(self.pos.x, targetPos.x)
             areaBR.y = max(self.pos.y, targetPos.y)
-            areaBR += Vector2(self.radius, self.radius) * 2
+            areaBR += Vector2(self.radius, self.radius)# * 2
             areaBR.x = min(areaBR.x, WIDTH)
             areaBR.y = min(areaBR.y, HEIGHT)
 
@@ -216,8 +216,8 @@ class Ball:
                         #self.vel = -normalized
                         targetPos = targetPos - normalized * overlap
 
-            if debugMode:
-                pygame.draw.rect(window, GREEN, (areaTL.x, areaTL.y, areaBR.x - areaTL.x, areaBR.y - areaTL.y), 0)
+            # if debugMode:
+            #     pygame.draw.rect(window, GREEN, (areaTL.x, areaTL.y, areaBR.x - areaTL.x, areaBR.y - areaTL.y), 0)
 
             self.pos = self.pos + self.vel * self.speed * speedMult * stepDT
 
@@ -226,7 +226,7 @@ class Ball:
     def draw(self, surface: pygame.Surface=window) -> None:
         if self.ballSprite:
             surf = pygame.transform.rotate(self.ballSprite, self.rotation)
-            self.rotation += 3
+            self.rotation += 1
             surface.blit(surf, (self.pos.x - self.radius, self.pos.y - self.radius))
         else:
             pygame.draw.circle(surface, self.color, (self.pos.x, self.pos.y), self.radius)
@@ -347,7 +347,7 @@ ballSprite = "images/ball.png"
 debugMode = False
 movementWithKeyboard = False
 generateFullLevel = False
-generateRandomLevel = True
+generateRandomLevel = False
 brickChance = .4
 
 # Move Pad
@@ -393,18 +393,6 @@ level2 = [
     '#.#....#.#',
     '#........#',
     '##########',
-]
-level3 = [
-    '..........',
-    '....##....',
-    '...#..#...',
-    '...#..#...',
-    '...#..#...',
-    '...#..#...',
-    '..#....#..',
-    '.#..##..#.',
-    '..##..##..',
-    '..........',
 ]
 chosenMap = level1
 
@@ -466,6 +454,7 @@ smallPadSizeMult = 1.7
 powerups: list[Powerup] = []
 
 dt = 1/FPS
+addingBalls = False
 while True:
     mouseX = pygame.mouse.get_pos()[0]
     mouseY = pygame.mouse.get_pos()[1]
@@ -482,6 +471,8 @@ while True:
                 xMove += 1
             elif event.key == K_e:
                 addBall()
+            elif event.key == K_f:
+                addingBalls = not addingBalls
         elif event.type == KEYUP:
             if event.key in (K_a, K_LEFT):
                 xMove += 1
@@ -490,6 +481,9 @@ while True:
 
     # Clear screen
     window.fill(WHITE)
+
+    if addingBalls:
+        addBall()
 
     # Update powerups
     for powerup in powerups[:]:
@@ -543,7 +537,6 @@ while True:
 
     # Draw FPS
     drawText(f"FPS: {clock.get_fps():.0f}", Vector2(), fontSize=25, textColor=RED)
-    print(dt)
 
     pygame.display.update()
     dt = clock.tick(FPS)/1000

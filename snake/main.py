@@ -14,7 +14,7 @@ WIDTH = 600
 HEIGHT = 600
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
-FPS = 10
+FPS = 6000
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -25,13 +25,13 @@ YELLOW = (255, 255, 0)
 ORANGE = (255, 127, 0)
 
 # Constants
-CELL_SIZE = 3
-SNAKE_MOVE_TIME = .01
+CELL_SIZE = 20
+SNAKE_MOVE_TIME = .1
 COLS = floor(WIDTH / CELL_SIZE)
 ROWS = floor(HEIGHT / CELL_SIZE)
 LINE_WIDTH = 1
-OFFSCREEN_CELLS_FRUIT_SPAWN = 25
-INITIAL_FRUITS = 1500
+OFFSCREEN_CELLS_FRUIT_SPAWN = 0
+INITIAL_FRUITS = 3
 WORLD_OFFSET = Vector2(0, 0)
 ARROW_SIZE = Vector2(80, 40)
 ARROW_DISTANCE_TO_SNAKE = 40
@@ -196,6 +196,8 @@ class Snake:
         # Get current and next head position
         headPos = self.__body[0]
         nextPos = headPos + self.direction
+        nextPos.x %= COLS
+        nextPos.y %= ROWS
         # Add new segment at index 0
         self.__body.insert(0, nextPos)
 
