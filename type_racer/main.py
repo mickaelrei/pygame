@@ -117,15 +117,15 @@ for word in wordsList:
         possibleWords.append(word.lower())
 
 # Variables
-SPEED = 20
+SPEED = 2
 FONT_TYPE = "courier new"
 FONT_SIZE = 18
 WORD_COLOR = WHITE
 FOCUSED_WORD_COLOR = ORANGE
-MIN_WORD_LENGTH = 10
-MAX_WORD_LENGTH = 15
-MAX_WORDS_ON_SCREEN = 20
-NEW_WORD_DELAY = .1
+MIN_WORD_LENGTH = 1
+MAX_WORD_LENGTH = 8
+MAX_WORDS_ON_SCREEN = 6
+NEW_WORD_DELAY = .4
 
 currentWord: Word = None
 currentTyping = ""
