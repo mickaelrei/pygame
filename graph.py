@@ -3,7 +3,6 @@ from pygame.locals import *
 import sys
 from pygame.math import Vector2
 import math
-import numpy
 from random import randint
 from time import time
 
