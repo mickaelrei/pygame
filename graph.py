@@ -20,7 +20,7 @@ BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 
 def f(x: float) -> float:
-    return math.exp(-x**2)
+    return math.cos(1 / (0.6 + abs(math.sin(x)))) * x**2 * 0.1 + math.sin(x) * 0.1
 
 def map(n, start1, stop1, start2, stop2):
     return (n - start1) / (stop1 - start1) * (stop2 - start2) + start2
@@ -52,7 +52,7 @@ numsAxisColor = (150, 150, 150)
 numsAxisWidth = 1
 
 # Screen graph dimension
-graphDimension = 10
+graphDimension = 20
 graphOffset = Vector2(0, 0)
 graphZoomStep = .3
 minDimension = .1
@@ -124,7 +124,7 @@ while True:
         drawText(str(numY), Vector2(WIDTH/2 + numsOffset.x + graphOffset.x, posY + numsOffset.y + graphOffset.y), centerY=0, centerX=1)
 
     # Calculate all points
-    points: list = []
+    lastPoint: Vector2 | None = None
     for i in range(numPoints):
         x = map(i, 0, numPoints-1, -graphDimension * 0.5 - planeOffset.x, graphDimension * 0.5 - planeOffset.x)
         try:
@@ -132,24 +132,24 @@ while True:
         except:
             continue
 
-        points.append(Vector2(x, y))
+        # New point
+        point = Vector2(x, y)
+        x1 = map(point.x, -graphDimension * 0.5, graphDimension * 0.5, 0, WIDTH)
+        y1 = map(point.y, -graphDimension * 0.5, graphDimension * 0.5, HEIGHT, 0)
 
-    # Draw points
-    for i in range(len(points)-1):
-        point1 = points[i]
-        point2 = points[i+1]
+        if drawLines and lastPoint is not None:
+            # Use last point to draw line
+            x2 = map(lastPoint.x, -graphDimension * 0.5, graphDimension * 0.5, 0, WIDTH)
+            y2 = map(lastPoint.y, -graphDimension * 0.5, graphDimension * 0.5, HEIGHT, 0)
 
-        x1 = map(point1.x, -graphDimension * 0.5, graphDimension * 0.5, 0, WIDTH)
-        y1 = map(point1.y, -graphDimension * 0.5, graphDimension * 0.5, HEIGHT, 0)
-
-        x2 = map(point2.x, -graphDimension * 0.5, graphDimension * 0.5, 0, WIDTH)
-        y2 = map(point2.y, -graphDimension * 0.5, graphDimension * 0.5, HEIGHT, 0)
-
-        if drawLines:
+            # HACK: Draw line only if distance is small (happens in asymptotes for example)
             if Vector2(x1, y1).distance_to(Vector2(x2, y2)) < 1e4:
                 pygame.draw.line(window, pointColor, (x1 + graphOffset.x, y1 + graphOffset.y), (x2 + graphOffset.x, y2 + graphOffset.y), pointWidth)
         else:
+            # Draw point
             pygame.draw.circle(window, pointColor, (x1 + graphOffset.x, y1 + graphOffset.y), pointWidth / 2)
+
+        lastPoint = point
 
     pygame.display.update()
     clock.tick(FPS)
