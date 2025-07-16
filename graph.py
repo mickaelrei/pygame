@@ -7,8 +7,8 @@ from random import randint
 from time import time
 
 pygame.init()
-WIDTH = 800
-HEIGHT = 800
+WIDTH = 700
+HEIGHT = 700
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 FPS = 6000

@@ -476,7 +476,7 @@ DEFAULT_COLOR_MAP = {
 
 # Variables
 currentLife = MAX_LIFE
-chosenBoard = paintings.amogus
+chosenBoard = paintings.creeper
 board = Board.fromTemplate(chosenBoard)
 # board = Board(rows=ROWS, cols=COLS)
 board.createDigits()

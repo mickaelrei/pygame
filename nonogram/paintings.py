@@ -50,28 +50,40 @@ campfire = {
     ]
 }
 
-creeper = [
-    'gggggggggg',
-    'g........g',
-    'g.gg..gg.g',
-    'g.gg..gg.g',
-    'g...gg...g',
-    'g..gggg..g',
-    'g..g..g..g',
-    'g........g',
-    'g........g',
-    'g........g',
+creeper = {
+    "colorMap": {
+        "g": (0, 255, 0),
+        ".": (0, 0, 0),
+    },
+    "board": [
+        'gggggggggg',
+        'g........g',
+        'g.gg..gg.g',
+        'g.gg..gg.g',
+        'g...gg...g',
+        'g..gggg..g',
+        'g..g..g..g',
+        'g........g',
+        'g........g',
+        'g........g',
+    ]
+}
 
-]
-
-smile = [
-    '..yyyyy..',
-    '.y.....y.',
-    'y.......y',
-    'y..b.b..y',
-    'y.......y',
-    'y.b...b.y',
-    'y..bbb..y',
-    '.y.....y.',
-    '..yyyyy..'
-]
+smile = {
+    "colorMap": {
+        "y": (255, 255, 0),
+        "b": (0, 0, 0),
+        ".": (255, 255, 255)
+    },
+    "board": [
+        '..bbbbb..',
+        '.byyyyyb.',
+        'byyyyyyyb',
+        'byybybyyb',
+        'byyyyyyyb',
+        'bybyyybyb',
+        'byybbbyyb',
+        '.byyyyyb.',
+        '..bbbbb..'
+    ]
+}
